@@ -1,4 +1,4 @@
-export interface Certificado {
+export interface ICertificado {
   id: string;
   nome: string;
   atividades: string[];

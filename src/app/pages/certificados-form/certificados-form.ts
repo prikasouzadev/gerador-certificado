@@ -3,35 +3,34 @@ import { SecondaryButton } from "../../components/secondary-button/secondary-but
 import { PrimaryButton } from "../../components/primary-button/primary-button";
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Certificado } from '../../interface/certificado';
-import { Router, RouterLink } from '@angular/router';
+import { ICertificado } from '../../interface/ICertificado';
+import { Router } from '@angular/router';
 import { CertificadoService } from '../../service/certificado.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-certificados-form',
-  imports: [SecondaryButton, PrimaryButton, FormsModule, CommonModule, RouterLink],
+  imports: [SecondaryButton, PrimaryButton, FormsModule, CommonModule],
   templateUrl: './certificados-form.html',
   styleUrl: './certificados-form.css',
 })
 export class CertificadosForm {
-  constructor(
+   constructor(
     private certificadoService: CertificadoService,
     private route: Router
   ) {}
   @ViewChild('form') form!: NgForm;
 
-  
-  certificado: Certificado = {
+  certificado: ICertificado = {
     id: '',
     atividades: [],
     nome: '',
     dataEmissao: '',
   };
-
   atividade: string = '';
 
-  campoInvalido(control: NgModel){
-    return control.invalid || control.touched;
+  campoInvalido(control: NgModel) {
+    return control.invalid && control.touched;
   }
 
   formValido() {
@@ -40,7 +39,7 @@ export class CertificadosForm {
     );
   }
 
- adicionarAtividade() {
+  adicionarAtividade() {
     if (this.atividade.length == 0) {
       return;
     }
@@ -57,7 +56,7 @@ export class CertificadosForm {
       return;
     }
     this.certificado.dataEmissao = this.dataAtual();
-    // this.certificado.id = uuidv4();
+    this.certificado.id = uuidv4();
     this.certificadoService.adicionarCertificado(this.certificado);
 
     this.route.navigate(['certificados', this.certificado.id]);
@@ -76,7 +75,7 @@ export class CertificadosForm {
     return dataFormatada;
   }
 
-  estadoInicialCertificado(): Certificado {
+  estadoInicialCertificado(): ICertificado {
     return {
       id: '',
       atividades: [],

@@ -8,13 +8,25 @@ import { BaseUi } from "./components/base-ui/base-ui";
 import { Certificados } from "./pages/certificados/certificados";
 import { CertificadosForm } from "./pages/certificados-form/certificados-form";
 import { Certificado } from "./pages/certificado/certificado";
+import { CertificadoService } from './service/certificado.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [Navbar, PrimaryButton, SecondaryButton, ItemCertificado, BaseUi, Certificados, CertificadosForm, Certificado, RouterOutlet],
+  imports: [Navbar, CommonModule, BaseUi, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('gerador-certificado');
+    title = 'gerador-certificado';
+  exibeNavbar: boolean = true;
+
+  constructor(private certificadoService: CertificadoService) {}
+
+  ngOnInit(): void {
+    const certificados = localStorage.getItem('certificados');
+    this.certificadoService.certificados = certificados
+      ? JSON.parse(certificados)
+      : [];
+  }
 }
